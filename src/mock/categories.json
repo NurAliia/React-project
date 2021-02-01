@@ -1,0 +1,7 @@
+{
+  "categories": [
+    { "id": 1, "name": "first category", "flags": null },
+    { "id": 2, "name": "second category", "flags": null },
+    { "id": 3, "name": "third category", "flags": null }
+  ]
+}
