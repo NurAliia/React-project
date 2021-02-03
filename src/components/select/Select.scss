@@ -1,0 +1,42 @@
+.select-container {
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  min-width: 250px;
+  border: 4px double #000;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.selected-text {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 20px;
+}
+
+.select-options {
+  position: absolute;
+  width: 100%;
+  border: 4px double #000;
+  margin-left: -4px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+li {
+  list-style-type: none;
+  padding: 6px 20px;
+  background: #d6d6d6;
+  border-bottom: 1px solid #8f8f8f;
+
+  &:hover {
+    background-color: #e4b19d;
+    color: #ffffff;
+  }
+}

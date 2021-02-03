@@ -1,4 +1,4 @@
-h1 {
-  color: #df7575;
-  text-align: center;
+.content {
+  display: flex;
+  justify-content: center;
 }

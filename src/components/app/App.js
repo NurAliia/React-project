@@ -1,15 +1,22 @@
-import React, { Component } from "react";
-
+import React, { PureComponent  } from "react";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+  faAngleDown, faAngleUp
+} from '@fortawesome/free-solid-svg-icons';
 import './App.css';
+import Select from "../select";
 
-class App extends Component {
-    render() {
-        return (
-            <div>
-                <h1>React App!</h1>
-            </div>
-        );
-    }
+library.add(faAngleDown, faAngleUp);
+
+class App extends PureComponent {
+  render() {
+    return (
+      <div className='content'>
+        <Select options={[ { id: 1, name: 'First' }, { id: 2, name: 'Second' } ]} />
+      </div>
+
+    );
+  }
 }
 
 export default App;
