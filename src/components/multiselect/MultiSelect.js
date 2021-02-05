@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './MultiSelect.scss';
+import Item from '../item';
 
 class MultiSelect extends React.Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class MultiSelect extends React.Component {
       placeholder: "Please select an category",
       input: this.props.input || '',
       options: this.props.options || [],
+      choosen: [],
       isOpen: false,
       page: 0
     }
@@ -33,18 +35,24 @@ class MultiSelect extends React.Component {
     }
   };
 
+  handleInputClick = () => {
+    this.setState({
+        isOpen: true,
+        page: 0
+      })
+  };
+
   handleSearch = (e) => {
     e.preventDefault();
     this.setState({
-        input: this.searchRef.current.value,
-        isOpen: true
+        input: this.searchRef.current.value
       })
   };
 
   handleOptionClick = e => {
     e.preventDefault();
     this.setState({
-      item: e.target.getAttribute("data-name"),
+      choosen: [...this.state.choosen, e.target.getAttribute("data-name")],
       isOpen: false
     });
   };
@@ -69,7 +77,7 @@ class MultiSelect extends React.Component {
 
   render() {
     const { options } = this.props;
-    const { isOpen, placeholder, page, input } = this.state;
+    const { isOpen, placeholder, page, input, choosen } = this.state;
     const items = options.slice(page * 2, page * 2 + 2)
       .filter(item => item.name.includes(input))
       .map(item =>
@@ -82,10 +90,14 @@ class MultiSelect extends React.Component {
           {item.name}
         </li>
       );
+    const choosenItems = choosen && choosen.map((item, index) =>
+      <Item index={index} name={item} choosen={this.props.choosen} />
+    )
     return (
       <div className="multiselect-container">
+        {choosenItems}
         <input className="search-field" autoComplete="on" type="search"
-          placeholder={placeholder} ref={this.searchRef} onChange={this.handleSearch}></input>
+          placeholder={placeholder} ref={this.searchRef} onChange={this.handleSearch} onClick={this.handleInputClick}></input>
         {isOpen && (
           <div className='multiselect-page'>
             <ul className="multiselect-options">
