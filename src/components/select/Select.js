@@ -43,7 +43,7 @@ class Select extends React.Component {
 
   handleOptionClick = e => {
     e.preventDefault();
-    this.props.toggleCategory(e.target.getAttribute("data"));
+    this.props.toggleCategory(+e.target.getAttribute("data"));
     this.setState({
       isOpen: false
     });
@@ -89,7 +89,7 @@ class Select extends React.Component {
 }
 
 Select.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.array),
+  options: PropTypes.arrayOf(PropTypes.object),
   choosen: PropTypes.number,
   toggleCategory: PropTypes.func,
 };

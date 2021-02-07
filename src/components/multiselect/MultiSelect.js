@@ -128,8 +128,8 @@ class MultiSelect extends React.Component {
 }
 
 MultiSelect.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.array),
-  choosen: PropTypes.arrayOf(PropTypes.array),
+  options: PropTypes.arrayOf(PropTypes.object),
+  choosen: PropTypes.arrayOf(PropTypes.number),
   search: PropTypes.string,
   toggleItem: PropTypes.func,
   changeSearch: PropTypes.func,
