@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toggleItem, changeSearch } from './multiselectActions';
 import './MultiSelect.scss';
 import Item from '../item';
-import { convertArrayToObject } from '../shared';
+import { convertArrayToObject, createObjectRegistry } from '../shared';
 import { getAllItems } from '../../reducers/itemReducer';
+import { addUserAction } from '../../commonActions';
 
 class MultiSelect extends React.Component {
   constructor(props) {
@@ -40,16 +41,25 @@ class MultiSelect extends React.Component {
   }
 
   handleClickOutside = e => {
+    this.props.registry(createObjectRegistry(
+      'handleClickOutside',
+      'MultiSelect'
+    ));
+
     if (
       e.target.classList.toString() === ''
-    ) {
+    )
       this.setState({
         isOpen: false
       });
-    }
   };
 
   handleInputClick = () => {
+    this.props.registry(createObjectRegistry(
+      'handleInputClick',
+      'MultiSelect'
+    ));
+
     this.setState({
       isOpen: true,
       page: 0
@@ -58,15 +68,21 @@ class MultiSelect extends React.Component {
 
   handleSearch = (e) => {
     e.preventDefault();
-    this.props.changeSearch(this.searchRef.current.value);
+    const value = this.searchRef.current.value;
+    this.props.changeSearch(value);
+
+    this.props.registry(createObjectRegistry('handleSearch', value));
   };
 
   handleOptionClick = e => {
     e.preventDefault();
-    this.props.toggleItem(+e.target.getAttribute("data"));
+    const data = +e.target.getAttribute("data");
+    this.props.toggleItem(data);
     this.setState({
       isOpen: false
     });
+
+    this.props.registry(createObjectRegistry('handleOptionClick', data));
   };
 
   handleIncrementPage = () => {
@@ -76,6 +92,8 @@ class MultiSelect extends React.Component {
       this.setState({
         page: ++page
       });
+
+    this.props.registry(createObjectRegistry('handleIncrementPage', page));
   }
 
   handleDecrementPage = () => {
@@ -85,6 +103,8 @@ class MultiSelect extends React.Component {
       this.setState({
         page: --page
       });
+  
+    this.props.registry(createObjectRegistry('handleDecrementPage', page));
   }
 
   render() {
@@ -138,6 +158,7 @@ MultiSelect.propTypes = {
   category: PropTypes.number,
   toggleItem: PropTypes.func,
   changeSearch: PropTypes.func,
+  registry: PropTypes.func,
 };
 
 MultiSelect.defaultProps = {
@@ -147,6 +168,7 @@ MultiSelect.defaultProps = {
   category: undefined,
   toggleItem: () => undefined,
   changeSearch: () => undefined,
+  registry: () => undefined,
 };
 
 const mapStateToProps = store => ({
@@ -160,6 +182,7 @@ const mapDispatchToProps = dispatch => ({
   getAll: () => dispatch(getAllItems()),
   toggleItem: item => dispatch(toggleItem(item)),
   changeSearch: str => dispatch(changeSearch(str)),
+  registry: item => dispatch(addUserAction(item)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MultiSelect);

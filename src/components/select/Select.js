@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './Select.scss';
 import { toggleCategoryItem } from './selectActions';
-import { convertArrayToObject } from '../shared';
+import { convertArrayToObject, createObjectRegistry } from '../shared';
 import { getAllCategories } from '../../reducers/categoryReducer';
+import { addUserAction } from '../../commonActions';
 
 class Select extends React.Component {
   constructor(props) {
@@ -26,24 +27,35 @@ class Select extends React.Component {
   }
 
   handleClickOutside = e => {
+    this.props.registry(createObjectRegistry('handleClickOutside', 'Select'));
+
     if (
       !e.target.classList.toString().match(/select-option|selected-text/i)
-    ) {
+    )
       this.setState({
         isOpen: false
       });
-    }
   };
 
   handleListDisplay = () => {
+    this.props.registry(createObjectRegistry(
+      'handleListDisplay',
+      this.state.isOpen ? 'Close': 'Open'
+    ));
+
     this.setState({
         isOpen: !this.state.isOpen
-      })
+      });
   };
 
   handleOptionClick = e => {
     e.preventDefault();
-    this.props.toggleCategory(+e.target.getAttribute("data"));
+    const data = +e.target.getAttribute("data");
+    this.props.toggleCategory(data);
+
+    if (!e.target.getAttribute("flags"))
+      this.props.registry(createObjectRegistry('handleOptionClick', data));
+
     this.setState({
       isOpen: false
     });
@@ -58,6 +70,7 @@ class Select extends React.Component {
         className="select-option"
         data={item.id}
         key={item.id}
+        flags={item.flags}
         onClick={this.handleOptionClick}
       >
         {item.name}
@@ -92,12 +105,14 @@ Select.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   choosen: PropTypes.number,
   toggleCategory: PropTypes.func,
+  registry: PropTypes.func,
 };
 
 Select.defaultProps = {
   options: [],
   choosen: undefined,
   toggleCategory: () => undefined,
+  registry: () => undefined,
 };
 
 const mapStateToProps = store => ({
@@ -108,6 +123,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch => ({
   getAll: () => dispatch(getAllCategories()),
   toggleCategory: item => dispatch(toggleCategoryItem(item)),
+  registry: item => dispatch(addUserAction(item)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Select);

@@ -1,7 +1,7 @@
 import { ADD_USER_ACTION, GET_ALL_USER_ACTIONS } from '../commonActions';
 
 const initialState = {
-  userActions: []
+  user_actions: []
 }
 
 export default function userActionReducer(state = initialState, action) {
@@ -9,19 +9,20 @@ export default function userActionReducer(state = initialState, action) {
     case GET_ALL_USER_ACTIONS: {
       return {
         ...state,
-        userActions: action.payload
+        user_actions: action.payload
       }
     }
     case ADD_USER_ACTION: {
+      console.log(action.payload);
       return {
         ...state,
-        userActions: [
+        user_actions: [
           {
             id: action.payload.id,
             eventName: action.payload.eventName,
             eventValue: action.payload.eventValue
           },
-          ...state.userActions
+          ...state.user_actions
         ]
       }
     }
