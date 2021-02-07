@@ -22,8 +22,9 @@ export default function itemsReducer(state = initialState, action) {
           ...state.items,
           {
             id: action.payload.id,
-            title: action.payload.title,
-            description: action.payload.description
+            name: action.payload.name,
+            parent_id: action.parent.parent_id,
+            flags: action.payload.flags
           }
         ]
       }
@@ -45,6 +46,14 @@ export default function itemsReducer(state = initialState, action) {
         ]
       }
     }
+    case itemActionTypes.REMOVE_ITEM: {
+      return {
+        ...state,
+        items: [
+          ...state.items.filter(item => item.id !== action.payload)
+        ]
+      }
+    }
     case itemActionTypes.TOGGLE_ITEM: {
       const unique =  [...new Set([
         action.payload,
@@ -56,7 +65,6 @@ export default function itemsReducer(state = initialState, action) {
       }
     }
     case itemActionTypes.SEARCH_ITEMS: {
-      console.log(action.payload);
       return {
         ...state,
         search: action.payload,

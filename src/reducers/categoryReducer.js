@@ -21,8 +21,8 @@ export default function categoryReducer(state = initialState, action) {
 			items: [
 				{
 					id: action.payload.id,
-					title: action.payload.title,
-					description: action.payload.description
+					name: action.payload.name,
+					flags: action.payload.flags
 				},
 				...state.items
 			]

@@ -13,7 +13,6 @@ export default function userActionReducer(state = initialState, action) {
       }
     }
     case ADD_USER_ACTION: {
-      console.log(action.payload);
       return {
         ...state,
         user_actions: [
