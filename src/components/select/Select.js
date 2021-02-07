@@ -50,7 +50,7 @@ class Select extends React.Component {
 
   handleOptionClick = e => {
     e.preventDefault();
-    const data = +e.target.getAttribute("data");
+    const data = parseInt(e.target.getAttribute("data"), 10);
     this.props.toggleCategory(data);
 
     if (!e.target.getAttribute("flags"))

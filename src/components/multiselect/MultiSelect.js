@@ -76,7 +76,7 @@ class MultiSelect extends React.Component {
 
   handleOptionClick = e => {
     e.preventDefault();
-    const data = +e.target.getAttribute("data");
+    const data = parseInt(e.target.getAttribute("data"), 10);
     this.props.toggleItem(data);
     this.setState({
       isOpen: false

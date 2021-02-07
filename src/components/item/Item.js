@@ -12,7 +12,7 @@ class Item extends React.Component {
   }
 
   handleRemove = e => {
-    const id = +e.target.getAttribute("id");
+    const id = parseInt(e.target.getAttribute("id"), 10);
     this.props.removeChoosenItem(id);
 
     this.props.registry(createObjectRegistry(
