@@ -1,16 +1,19 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toggleItem, changeSearch } from './multiselectActions';
 import './MultiSelect.scss';
 import Item from '../item';
+import { convertArrayToObject } from '../shared';
+import { getAllItems } from '../../reducers/itemReducer';
 
 class MultiSelect extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      placeholder: "Please select an category",
-      input: this.props.input || '',
-      options: this.props.options || [],
-      choosen: [],
+      placeholder: "Please select items",
+      filtered: [],
       isOpen: false,
       page: 0
     }
@@ -18,11 +21,18 @@ class MultiSelect extends React.Component {
   }
 
   componentDidMount() {
+    this.props.getAll();
     document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  componentWillReceiveProps() {
+    this.setState((_, props) => ({
+      filtered: props.options.filter(item => item.name.includes(props.search))
+    }));
   }
 
   handleClickOutside = e => {
@@ -37,30 +47,28 @@ class MultiSelect extends React.Component {
 
   handleInputClick = () => {
     this.setState({
-        isOpen: true,
-        page: 0
-      })
+      isOpen: true,
+      page: 0
+    })
   };
 
   handleSearch = (e) => {
     e.preventDefault();
-    this.setState({
-        input: this.searchRef.current.value
-      })
+    this.props.changeSearch(this.searchRef.current.value);
   };
 
   handleOptionClick = e => {
     e.preventDefault();
+    this.props.toggleItem(+e.target.getAttribute("data"));
     this.setState({
-      choosen: [...this.state.choosen, e.target.getAttribute("data-name")],
       isOpen: false
     });
   };
 
   handleIncrementPage = () => {
-    let { page, options } = this.state;
+    let { page, filtered } = this.state;
 
-    if (options.length >= (page + 1) * 2)
+    if (filtered.length >= (page + 1) * 2)
       this.setState({
         page: ++page
       });
@@ -76,22 +84,22 @@ class MultiSelect extends React.Component {
   }
 
   render() {
-    const { options } = this.props;
-    const { isOpen, placeholder, page, input, choosen } = this.state;
-    const items = options.slice(page * 2, page * 2 + 2)
-      .filter(item => item.name.includes(input))
+    const { choosen } = this.props;
+    const { isOpen, placeholder, page, filtered } = this.state;
+    const items = filtered.slice(page * 2, page * 2 + 2)
       .map(item =>
         <li
           className="multiselect-option"
-          data-name={item.name}
+          data={item.id}
           key={item.id}
           onClick={this.handleOptionClick}
         >
           {item.name}
         </li>
       );
-    const choosenItems = choosen && choosen.map((item, index) =>
-      <Item index={index} name={item} choosen={this.props.choosen} />
+    const filteredById = convertArrayToObject(filtered, 'id');
+    const choosenItems = choosen && choosen.map(key =>
+      <Item index={key} name={filteredById[key].name} choosen={this.props.choosen} />
     )
     return (
       <div className="multiselect-container">
@@ -119,4 +127,31 @@ class MultiSelect extends React.Component {
   }
 }
 
-export default MultiSelect;
+MultiSelect.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.array),
+  choosen: PropTypes.arrayOf(PropTypes.array),
+  search: PropTypes.string,
+  toggleItem: PropTypes.func,
+  changeSearch: PropTypes.func,
+};
+
+MultiSelect.defaultProps = {
+  options: [],
+  choosen: [],
+  search: '',
+  toggleItem: () => undefined,
+  changeSearch: () => undefined,
+};
+
+const mapStateToProps = store => ({
+  options: store.item.items,
+  choosen: store.item.choosen,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getAll: () => dispatch(getAllItems()),
+  toggleItem: item => dispatch(toggleItem(item)),
+  changeSearch: str => dispatch(changeSearch(str)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MultiSelect);

@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from 'react-redux';
+import { removeChoosenItem } from '../multiselect/multiselectActions';
 import './Item.scss';
 
 class Item extends React.Component {
@@ -7,7 +9,8 @@ class Item extends React.Component {
   }
 
   handleRemove = e => {
-    e.target.getAttribute("data-name");
+    const id = e.target.getAttribute("data");
+    this.props.removeChoosenItem(+id);
   }
 
   render() {
@@ -15,7 +18,7 @@ class Item extends React.Component {
     return (
       <li
         className="multiselect-item"
-        data-name={name}
+        data={name}
         key={index}
       >
         <span>{name}</span>
@@ -26,4 +29,8 @@ class Item extends React.Component {
   }
 }
 
-export default Item;
+const mapDispatchToProps = dispatch => ({
+  removeChoosenItem: item => dispatch(removeChoosenItem(item)),
+});
+
+export default connect(mapDispatchToProps)(Item);
