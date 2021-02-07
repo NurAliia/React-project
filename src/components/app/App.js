@@ -13,8 +13,10 @@ class App extends PureComponent {
   render() {
     return (
       <div className='content'>
-        <Select options={[ { id: 1, name: 'First' }, { id: 2, name: 'Second' } ]} />
-        <MultiSelect options={[ { id: 1, name: 'First' }, { id: 2, name: 'Second' }, { id: 3, name: 'Third' } ]} />
+        <p>Select</p>
+        <Select />
+        <p>MultiSelect</p>
+        <MultiSelect />
       </div>
 
     );
