@@ -31,7 +31,11 @@ class MultiSelect extends React.Component {
 
   componentWillReceiveProps() {
     this.setState((_, props) => ({
-      filtered: props.options.filter(item => item.name.includes(props.search))
+      filtered: props.options.filter(item =>
+        item.name.includes(props.search)
+          && !props.choosen.includes(item.id)
+            && (!props.category || item.parent_id === props.category)
+      )
     }));
   }
 
@@ -84,7 +88,7 @@ class MultiSelect extends React.Component {
   }
 
   render() {
-    const { choosen } = this.props;
+    const { choosen, options } = this.props;
     const { isOpen, placeholder, page, filtered } = this.state;
     const items = filtered.slice(page * 2, page * 2 + 2)
       .map(item =>
@@ -97,9 +101,9 @@ class MultiSelect extends React.Component {
           {item.name}
         </li>
       );
-    const filteredById = convertArrayToObject(filtered, 'id');
-    const choosenItems = choosen && choosen.map(key =>
-      <Item index={key} name={filteredById[key].name} choosen={this.props.choosen} />
+    const optionsById = convertArrayToObject(options, 'id');
+    const choosenItems = choosen && choosen.map(key => optionsById[key] &&
+      <Item index={key} name={optionsById[key].name} choosen={this.props.choosen} />
     )
     return (
       <div className="multiselect-container">
@@ -131,6 +135,7 @@ MultiSelect.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   choosen: PropTypes.arrayOf(PropTypes.number),
   search: PropTypes.string,
+  category: PropTypes.number,
   toggleItem: PropTypes.func,
   changeSearch: PropTypes.func,
 };
@@ -139,6 +144,7 @@ MultiSelect.defaultProps = {
   options: [],
   choosen: [],
   search: '',
+  category: undefined,
   toggleItem: () => undefined,
   changeSearch: () => undefined,
 };
@@ -146,6 +152,8 @@ MultiSelect.defaultProps = {
 const mapStateToProps = store => ({
   options: store.item.items,
   choosen: store.item.choosen,
+  search: store.item.search,
+  category: store.category.choosen,
 });
 
 const mapDispatchToProps = dispatch => ({

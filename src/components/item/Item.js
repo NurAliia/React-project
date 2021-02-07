@@ -9,7 +9,7 @@ class Item extends React.Component {
   }
 
   handleRemove = e => {
-    const id = e.target.getAttribute("data");
+    const id = e.target.getAttribute("id");
     this.props.removeChoosenItem(+id);
   }
 
@@ -22,7 +22,7 @@ class Item extends React.Component {
         key={index}
       >
         <span>{name}</span>
-        <span className="remove" onClick={this.handleRemove}>X</span>          
+        <span className="remove" id={index} onClick={this.handleRemove}>X</span>          
       </li>
 
     );
@@ -33,4 +33,4 @@ const mapDispatchToProps = dispatch => ({
   removeChoosenItem: item => dispatch(removeChoosenItem(item)),
 });
 
-export default connect(mapDispatchToProps)(Item);
+export default connect(null, mapDispatchToProps)(Item);

@@ -29,10 +29,10 @@ export default function itemsReducer(state = initialState, action) {
       }
     }
     case itemActionTypes.REMOVE_CHOOSEN_ITEM: {
-      const filterArray = state.items.filter(item => item.id !== action.payload);
+      const filterArray = state.choosen.filter(item => item !== action.payload);
       return {
         ...state,
-        items: filterArray
+        choosen: filterArray
       }
     }
     case itemActionTypes.EDIT_ITEM: {
@@ -46,15 +46,17 @@ export default function itemsReducer(state = initialState, action) {
       }
     }
     case itemActionTypes.TOGGLE_ITEM: {
+      const unique =  [...new Set([
+        action.payload,
+        ...state.choosen
+      ])];
       return {
         ...state,
-        choosen: [
-          action.payload,
-          ...state.choosen
-        ]
+        choosen: unique
       }
     }
     case itemActionTypes.SEARCH_ITEMS: {
+      console.log(action.payload);
       return {
         ...state,
         search: action.payload,
