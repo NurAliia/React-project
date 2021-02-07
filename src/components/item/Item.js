@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { removeChoosenItem } from '../multiselect/multiselectActions';
+import PropTypes from 'prop-types';
 import './Item.scss';
+import { createObjectRegistry } from '../shared';
+import { removeChoosenItem } from '../multiselect/multiselectActions';
+import { addUserAction } from '../../commonActions';
 
 class Item extends React.Component {
   constructor(props) {
@@ -9,8 +12,13 @@ class Item extends React.Component {
   }
 
   handleRemove = e => {
-    const id = e.target.getAttribute("id");
-    this.props.removeChoosenItem(+id);
+    const id = +e.target.getAttribute("id");
+    this.props.removeChoosenItem(id);
+
+    this.props.registry(createObjectRegistry(
+      'handleRemoveItem',
+      id
+    ));
   }
 
   render() {
@@ -29,8 +37,20 @@ class Item extends React.Component {
   }
 }
 
+Item.propTypes = {
+  removeChoosenItem: PropTypes.func,
+  registry: PropTypes.func,
+};
+
+Item.defaultProps = {
+  removeChoosenItem: () => undefined,
+  registry: () => undefined,
+};
+
+
 const mapDispatchToProps = dispatch => ({
   removeChoosenItem: item => dispatch(removeChoosenItem(item)),
+  registry: item => dispatch(addUserAction(item)),
 });
 
 export default connect(null, mapDispatchToProps)(Item);
