@@ -5,7 +5,8 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.join(__dirname, "/dist"),
-    filename: "index-bundle.js"
+    filename: "index-bundle.js",
+    publicPath: './'
   },
   module: {
     rules: [
@@ -19,6 +20,14 @@ module.exports = {
         use: ["style-loader", "css-loader", 'sass-loader']
       }
     ]
+  },
+  devServer: {
+    historyApiFallback: true,
+    contentBase: path.join(__dirname, "/dist"),
+    port: 8080,
+    compress: true,
+    hot: true,
+    open: true
   },
   plugins: [
     new HtmlWebpackPlugin({

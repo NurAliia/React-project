@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link, withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './Select.scss';
 import { toggleCategoryItem } from './selectActions';
@@ -50,7 +51,8 @@ class Select extends React.Component {
 
   handleOptionClick = e => {
     e.preventDefault();
-    const data = parseInt(e.target.getAttribute("data"), 10);
+    console.log(e.target.id);
+    const data = parseInt(e.target.id, 10);
     this.props.toggleCategory(data);
 
     if (!e.target.getAttribute("flags"))
@@ -65,15 +67,15 @@ class Select extends React.Component {
     const { options, choosen } = this.props;
     const { isOpen } = this.state;
     const optionsById = convertArrayToObject(options, 'id');
-    const items = options.map(item => 
+    const items = options.map(item =>
       <li
         className="select-option"
-        data={item.id}
         key={item.id}
         flags={item.flags}
-        onClick={this.handleOptionClick}
       >
-        {item.name}
+        <Link to={`/select/${item.id}/multiselect`} className="link select-option" onClick={this.handleOptionClick}>
+          {item.name}
+        </Link>
       </li>
     );
     const showItem = optionsById[choosen]
@@ -126,4 +128,7 @@ const mapDispatchToProps = dispatch => ({
   registry: item => dispatch(addUserAction(item)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Select);
+export default withRouter(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Select));

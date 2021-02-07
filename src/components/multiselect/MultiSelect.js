@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { withRouter } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toggleItem, changeSearch } from './multiselectActions';
 import './MultiSelect.scss';
@@ -22,7 +23,6 @@ class MultiSelect extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAll();
     document.addEventListener("mousedown", this.handleClickOutside);
   }
 
@@ -38,6 +38,12 @@ class MultiSelect extends React.Component {
             && (!props.category || item.parent_id === props.category)
       )
     }));
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.props.getAll();
+    }
   }
 
   handleClickOutside = e => {
@@ -185,4 +191,7 @@ const mapDispatchToProps = dispatch => ({
   registry: item => dispatch(addUserAction(item)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiSelect);
+export default withRouter(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MultiSelect));

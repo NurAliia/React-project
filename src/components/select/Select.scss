@@ -39,3 +39,15 @@ li {
     color: #ffffff;
   }
 }
+
+.link {
+  text-decoration: none;
+
+  &:visited, &:link {
+    color: black;
+  }
+
+  &:hover {
+    color: red;
+  }
+}
