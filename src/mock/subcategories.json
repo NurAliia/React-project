@@ -1,7 +1,5 @@
-{
-  "subcategories": [
-    {"id": 1, "parent_id": 1, "name": "first subcategory", "flags": null },
-    {"id": 2, "parent_id": 2, "name": "second subcategory", "flags": null },
-    {"id": 3, "parent_id": 3, "name": "third subcategory", "flags": null }
-  ]
-}
+[
+  {"id": 1, "parent_id": 1, "name": "first subcategory", "flags": null },
+  {"id": 2, "parent_id": 2, "name": "second subcategory", "flags": null },
+  {"id": 3, "parent_id": 3, "name": "third subcategory", "flags": null }
+]
